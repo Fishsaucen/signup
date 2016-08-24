@@ -21,30 +21,8 @@ import re
 form_signup="""
 <html>
     <head>
+        <link rel="stylesheet" type="text/css" href="style.css">
         <title>User Registration</title>
-        <style>
-            .error {
-                color: red;
-            }
-            #signup_div {
-                position: absolute;
-                left: 30%%;
-                display: block;
-                margin: center;
-                background-color: #4ed;
-            }
-            #table_header {
-                padding-top: 2%%;
-                padding-bottom: 0%%;
-                text-align: center;
-                background-color: #cae;
-            }
-            input {
-                position: relative;
-                top: 8px;
-                left: 15px;
-            }
-        </style>
     </head>
 <body>
     <div id="signup_div">
@@ -61,8 +39,8 @@ form_signup="""
                     <td>
                         <input type="text" name="user_name" value="%(user_name)s">
                     </td>
-                    <td>
-                        <span class="error">%(user_name_error)s</span>
+                    <td class="error">
+                        %(user_name_error)s
                     </td>
                 </tr>
                 <tr>
@@ -72,8 +50,8 @@ form_signup="""
                     <td>
                         <input type="password" name="password">
                     </td>
-                    <td>
-                        <span class="error">%(password_error)s</span>
+                    <td class="error" rowspan="2">
+                        %(password_error)s
                     </td>
                 </tr>
                 <tr>
@@ -93,14 +71,25 @@ form_signup="""
                     <td>
                         <input type="text" name="email" value="%(email)s">
                     </td>
-                    <td>
-                        <span class="error">%(email_error)s</span>
+                    <td class="error">
+                        %(email_error)s
                     </td>
                 </tr>
             </table>
-            <input type="submit">
+            <input type="submit" class="button">
         </form>
     </div>
+</body>
+</html>
+"""
+welcome_form="""
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Welcome %(user_name)s</title>
+</head>
+<body>
+    <h1 class="welcome_header">Welcome %(user_name)s</h1>
 </body>
 </html>
 """
@@ -175,12 +164,12 @@ class MainHandler(webapp2.RequestHandler):
 
 
 class WelcomeHandler(webapp2.RequestHandler):
+    def write_form(self, user_name=""):
+        self.response.write(welcome_form % {"user_name": user_name})
 
     def get(self):
         user_name= self.request.get('user_name')
-        self.response.write("<h1>hiya {}</h1>".format(user_name))
-
-        #TODO: you NEED to escape all user input
+        self.write_form(user_name)
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
